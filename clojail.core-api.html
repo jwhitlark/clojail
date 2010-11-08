@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Overview - clojail nil API documentation</title>
+    <title>clojail.core - clojail nil API documentation</title>
     <link href="static/favicon.png" rel="icon" />
     <link href="static/favicon.png" rel="shortcut icon" />
     <link media="all" type="text/css" href="static/clojure.css" rel="stylesheet" />
@@ -51,65 +51,88 @@ namespace.
                 <div id="right-sidebar"><div id="toc">
   <h1 class="nopad">Table of Contents</h1>
   <div style="margin-left: 1em;" class="toc-section">
-    <a href="#clojail.core">clojail.core</a>
-    
-    <br />
-  </div><div style="margin-left: 1em;" class="toc-section">
-    <a href="#clojail.jvm">clojail.jvm</a>
-    
-    <br />
-  </div><div style="margin-left: 1em;" class="toc-section">
-    <a href="#clojail.testers">clojail.testers</a>
-    
+    <a href="#toc0">Overview</a>
+    <div style="margin-left: 1em;" class="toc-entry">
+      <a href="#clojail.core/enable-security-manager">enable-security-manager</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#clojail.core/sandbox">sandbox</a>
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a href="#clojail.core/thunk-timeout">thunk-timeout</a>
+    </div>
     <br />
   </div>
 </div>
 </div>
-                <div id="content-tag"><h1 id="toc0">API Overview - <span id="header-project">clojail</span> <span id="header-version"></span> (<span id="header-status"></span>)</h1>
+                <div id="content-tag"><h1 id="overview">API for <span id="namespace-name">clojail.core</span>
+  - <span id="header-project">clojail</span> <span id="header-version"></span> (<span id="header-status"></span>)
+  </h1>
+
+<br />Usage:
+<pre>
+(ns your-namespace
+  (:require <span id="long-name">clojail.core</span>))
+</pre><pre>
+</pre><h2>Overview</h2>
+<pre id="namespace-docstr">Defines simple Clojure sandboxing functionality.</pre>
+
+
 <br />
-<div id="project-description">An experimental sandboxing library.</div>
-<br />
-<div id="namespace-entry">
+<h2>Public Variables and Functions</h2>
+<div id="var-entry">
   <br />
   <hr />
-  <h2 id="clojail.core">clojail.core</h2>
+  <h2 id="clojail.core/enable-security-manager">enable-security-manager</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (enable-security-manager)
+</pre>
+  <pre id="var-docstr">Enable the JVM security manager. The sandbox can do this for you.</pre>
   
-  <a href="clojail.core-api.html" id="api-link">Detailed API documentation</a><br />
-  <pre id="namespace-docstr">Defines simple Clojure sandboxing functionality.</pre>
   
   
-  
-  Public variables and functions:
-  <span id="var-link"><a href="clojail.core-api.html#clojail.core/enable-security-manager" id="var-tag">enable-security-manager</a> </span><span id="var-link"><a href="clojail.core-api.html#clojail.core/sandbox" id="var-tag">sandbox</a> </span><span id="var-link"><a href="clojail.core-api.html#clojail.core/thunk-timeout" id="var-tag">thunk-timeout</a> </span><br />
-  
-</div><div id="namespace-entry">
+</div><div id="var-entry">
   <br />
   <hr />
-  <h2 id="clojail.jvm">clojail.jvm</h2>
+  <h2 id="clojail.core/sandbox">sandbox</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (sandbox tester &amp; {:keys [timeout namespace context jvm?], :or {timeout 10000, namespace (gensym sandbox), context (-&gt; (empty-perms-list) domain context), jvm? true}})
+</pre>
+  <pre id="var-docstr">This function creates a new sandbox from a tester (a set of symbols that make up a blacklist)
+and optional arguments.
+
+Optional arguments are as follows:
+:timeout, default is 10000 MS or 10 seconds. If the expression evaluated in the sandbox takes
+longer than the timeout, an error will be thrown and the thread running the code will be stopped.
+:namespace, the namespace of the sandbox. The default is (gensym "sandbox").
+:context, the context for the JVM sandbox to run in. Only relevant if :jvm? is true. It has a sane
+default, so you shouldn't need to worry about this.
+:jvm?, if set to true, the JVM sandbox will be employed. It defaults to true.
+
+This function will return a new function that you should bind to something. You can call this
+function with code and it will be evaluated in the sandbox. The function also takes an optional
+second parameter which is a hashmap of vars to values that will be passed to push-thread-bindings.
+
+Example: (def sb (sandbox #{'alter-var-root 'java.lang.Thread} :timeout 5000))
+         (let [writer (java.io.StringWriter.)]
+           (sb '(println "blah") {#'*out* writer}) (str writer))
+The above example returns "blah\n"</pre>
   
-  <a href="clojail.jvm-api.html" id="api-link">Detailed API documentation</a><br />
-  <pre id="namespace-docstr"></pre>
   
   
-  
-  Public variables and functions:
-  <br />
-  
-</div><div id="namespace-entry">
+</div><div id="var-entry">
   <br />
   <hr />
-  <h2 id="clojail.testers">clojail.testers</h2>
+  <h2 id="clojail.core/thunk-timeout">thunk-timeout</h2>
+  <span id="var-type">function</span><br />
+  <pre id="var-usage">Usage: (thunk-timeout thunk seconds)
+</pre>
+  <pre id="var-docstr">Takes a function and an amount of time in ms to wait for the function to finish
+executing. The sandbox can do this for you.</pre>
   
-  <a href="clojail.testers-api.html" id="api-link">Detailed API documentation</a><br />
-  <pre id="namespace-docstr">A set of predefined testers that you can use in your own sandboxes. I'm not promising that
-any of these are really totally secure. I cannot possibly test these for everything.</pre>
   
-  
-  
-  Public variables and functions:
-  <span id="var-link"><a href="clojail.testers-api.html#clojail.testers/secure-tester" id="var-tag">secure-tester</a> </span><br />
   
 </div>
+
+
 </div>
               </div>
             </div>
