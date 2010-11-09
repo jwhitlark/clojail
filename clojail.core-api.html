@@ -96,8 +96,11 @@ namespace.
   <span id="var-type">function</span><br />
   <pre id="var-usage">Usage: (sandbox tester &amp; {:keys [timeout namespace context jvm?], :or {timeout 10000, namespace (gensym sandbox), context (-&gt; (empty-perms-list) domain context), jvm? true}})
 </pre>
-  <pre id="var-docstr">This function creates a new sandbox from a tester (a set of symbols that make up a blacklist)
-and optional arguments.
+  <pre id="var-docstr">This function creates a new sandbox from a tester (a set of symbols that make up a blacklist
+and possibly a whitelist) and optional arguments. A tester can either be a plain set of symbols,
+in which case it'll be treated as a blacklist. Otherwise, you can provide a map of :whitelist and
+:blacklist bound to sets. In this case, the whitelist and blacklist will both be used. If you only
+want a whitelist, just supply :whitelist in the map.
 
 Optional arguments are as follows:
 :timeout, default is 10000 MS or 10 seconds. If the expression evaluated in the sandbox takes
